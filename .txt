@@ -1,0 +1,34 @@
+- Super Admin
+- Admin - SEEDERS
+
+// 1. Data Product ( CRUD )
+
+Table Product ( KEBUTUHAN FORM )
+    1. Nama Product 
+    2. Deskripsi Product
+    3. Gambar Product
+    4. Kategori Product
+    5. Harga
+
+
+// 2. Data Penjualan ( POST ) 
+    
+    1. Nama Karyawan - ID USER TOKEN
+    2. Nama Pembeli
+    3. Product - DROPDOWN ID PRODUCT
+    4. Alamat Pembeli
+    5. Tanggal Beli
+    4. Harga
+    5. LUNAS / BELUM LUNAS 
+    5. Gambar ( Bukti )
+    6. Jumlah /kg
+
+// TRANSACTION - GET
+    1. Total Sales = All Data Penjualan
+    2. Total Order = 
+
+// BERITA ( CRUD )
+    1. Image
+    2. Title
+    3. Deskripsi
+    4. Date = createdAt
