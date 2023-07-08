@@ -88,7 +88,7 @@ module.exports = {
 
         cloudinary.uploader.upload(
           file,
-          { folder: "user-ngaos" },
+          { folder: "employee-ngaos" },
           async function (err, result) {
             if (!!err) {
               res.status(400).json({
