@@ -19,4 +19,4 @@ module.exports = multer({
     }
   },
   limits: { fileSize: maxSize },
-}).single("image_profile");
+}).single("image");

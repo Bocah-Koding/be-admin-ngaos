@@ -3,6 +3,13 @@ const {
   registerAdmin,
   login,
 } = require("../app/controllers/authController");
+const {
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getAllProductData,
+  getProductById,
+} = require("../app/controllers/productController");
 const handleGetRoot = require("../app/controllers/root");
 const {
   getAllUserData,
@@ -31,5 +38,20 @@ router.get(prefix + "/users", authorize, getAllUserData);
 
 // get user by id
 router.get(prefix + "/users/:id", authorize, getUserById);
+
+// create product
+router.post(prefix + "/product", authorize, validator, createProduct);
+
+// get all product
+router.get(prefix + "/product", getAllProductData);
+
+// get product by id
+router.get(prefix + "/product/:productId", getProductById);
+
+// update product
+router.put(prefix + "/product/:productId", authorize, validator, updateProduct);
+
+// delete product
+router.delete(prefix + "/product/:productId", authorize, deleteProduct);
 
 module.exports = router;
