@@ -126,6 +126,7 @@ module.exports = {
   async registerAdmin(req, res) {
     const password = await encryptPassword(req.body.password);
     const isAdmin = req.user.role;
+    const { name, email, phone } = req.body;
 
     if (isAdmin !== "super admin") {
       res.status(401).json({
@@ -134,8 +135,6 @@ module.exports = {
     }
 
     if (req.file == null) {
-      const { name, email, phone } = req.body;
-
       // check email and password is not empty
       if (!email || !password) {
         return res.status(400).json({
@@ -195,10 +194,10 @@ module.exports = {
 
           const userForm = await User.create({
             id: uuid(),
-            name: req.body.name,
-            password: req.body.password,
-            email: req.body.email,
-            phone: req.body.phone,
+            name: name,
+            password: password,
+            email: email,
+            phone: phone,
             image_profile: result.url,
             role: "admin",
           });
