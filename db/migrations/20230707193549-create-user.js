@@ -24,7 +24,7 @@ module.exports = {
       role: {
         type: Sequelize.STRING,
       },
-      image_profile: {
+      image: {
         type: Sequelize.STRING,
       },
       createdAt: {
