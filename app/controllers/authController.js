@@ -10,7 +10,7 @@ const salt = 10;
 function encryptPassword(password) {
   return new Promise((resolve, reject) => {
     bcrypt.hash(password, salt, (err, encryptedPassword) => {
-      if (!err) {
+      if (err) {
         reject(err);
         return;
       }
@@ -38,10 +38,9 @@ function createToken(payload) {
 module.exports = {
   async register(req, res) {
     try {
+      const password = await encryptPassword(req.body.password);
+      const { name, email, phone } = req.body;
       if (req.file == null) {
-        const password = await encryptPassword(req.body.password);
-        const { name, email, phone } = req.body;
-
         // check email and password is not empty
         if (!email || !password) {
           return res.status(400).json({
@@ -75,6 +74,7 @@ module.exports = {
           password: password,
           email: email,
           phone: phone,
+          role: "member",
         });
 
         res.status(201).json({
@@ -100,11 +100,12 @@ module.exports = {
 
             const userForm = await User.create({
               id: uuid(),
-              name: req.body.name,
-              password: req.body.password,
-              email: req.body.email,
-              phone: req.body.phone,
+              name: name,
+              password: password,
+              email: email,
+              phone: phone,
               image_profile: result.url,
+              role: "member",
             });
 
             res.status(201).json({
@@ -120,5 +121,139 @@ module.exports = {
         message: error,
       });
     }
+  },
+
+  async registerAdmin(req, res) {
+    const password = await encryptPassword(req.body.password);
+    const isAdmin = req.user.role;
+
+    if (isAdmin !== "super admin") {
+      res.status(401).json({
+        message: "Unauthorized access is prohibited",
+      });
+    }
+
+    if (req.file == null) {
+      const { name, email, phone } = req.body;
+
+      // check email and password is not empty
+      if (!email || !password) {
+        return res.status(400).json({
+          status: "error",
+          message: "Email and password is required",
+        });
+      }
+
+      // validator email format using regex
+      const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({
+          status: "error",
+          message: "Email format is invalid",
+        });
+      }
+
+      // check if email already exist
+      const emailUser = await findEmail(email);
+      if (emailUser) {
+        return res.status(400).json({
+          status: "Error",
+          message: "Email already Exist",
+          data: {},
+        });
+      }
+
+      const userForm = await User.create({
+        id: uuid(),
+        name: name,
+        password: password,
+        email: email,
+        phone: phone,
+        role: "admin",
+      });
+
+      res.status(201).json({
+        status: "success",
+        message: "register success",
+        data: userForm,
+      });
+    } else {
+      const fileBase64 = req.file.buffer.toString("base64");
+      const file = `data:${req.file.mimetype};base64,${fileBase64}`;
+
+      cloudinary.uploader.upload(
+        file,
+        { folder: "admin-ngaos" },
+        async function (err, result) {
+          if (!!err) {
+            res.status(400).json({
+              status: "Upload Fail",
+              errors: err.message,
+            });
+            return;
+          }
+
+          const userForm = await User.create({
+            id: uuid(),
+            name: req.body.name,
+            password: req.body.password,
+            email: req.body.email,
+            phone: req.body.phone,
+            image_profile: result.url,
+            role: "admin",
+          });
+
+          res.status(201).json({
+            status: "success",
+            data: userForm,
+          });
+        }
+      );
+    }
+  },
+
+  async login(req, res) {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await User.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        message: "email not found",
+      });
+      return;
+    }
+
+    const isPasswordCorrect = await checkPassword(user.password, password);
+
+    if (!isPasswordCorrect) {
+      res.status(401).json({
+        message: "Password salah!",
+      });
+      return;
+    }
+
+    const token = createToken({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    });
+
+    res.status(201).json({
+      token: token,
+      email: user.email,
+      role: user.role,
+    });
+  },
+
+  async whoami(req, res) {
+    res.status(200).json(req.user);
   },
 };
