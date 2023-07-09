@@ -22,7 +22,7 @@ const router = require("express").Router();
 
 const prefix = "/api/ngaos";
 
-router.get("/", handleGetRoot);
+router.get("/api/ngaos", handleGetRoot);
 
 // Register User
 router.post(prefix + "/register", validator, register);
