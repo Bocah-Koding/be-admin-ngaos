@@ -25,7 +25,7 @@ const prefix = "/api/ngaos";
 
 router.get("/api/ngaos", handleGetRoot);
 
-router.get(prefix + "/whoami", whoami);
+router.get(prefix + "/whoami", authorize, whoami);
 
 // Register User
 router.post(prefix + "/register", validator, register);
