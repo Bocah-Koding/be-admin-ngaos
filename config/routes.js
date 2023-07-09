@@ -2,6 +2,7 @@ const {
   register,
   registerAdmin,
   login,
+  whoami,
 } = require("../app/controllers/authController");
 const {
   createProduct,
@@ -23,6 +24,8 @@ const router = require("express").Router();
 const prefix = "/api/ngaos";
 
 router.get("/api/ngaos", handleGetRoot);
+
+router.get(prefix + "/whoami", whoami);
 
 // Register User
 router.post(prefix + "/register", validator, register);
