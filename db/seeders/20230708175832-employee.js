@@ -1,5 +1,6 @@
 "use strict";
-
+const bcrypt = require("bcrypt");
+const { v4: uuid } = require("uuid");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
