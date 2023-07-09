@@ -253,6 +253,20 @@ module.exports = {
   },
 
   async whoami(req, res) {
-    res.status(200).json(req.user);
+    const { id, name, email, phone, role } = req.user;
+
+    const user = {
+      id,
+      name,
+      email,
+      phone,
+      role,
+    };
+
+    res.status(200).json({
+      status: "success",
+      message: "get data success",
+      data: user,
+    });
   },
 };
