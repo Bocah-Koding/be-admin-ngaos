@@ -1,20 +1,20 @@
 const {
-  register,
-  registerAdmin,
-  login,
-  whoami,
+    register,
+    registerAdmin,
+    login,
+    whoami,
 } = require("../app/controllers/authController");
 const {
-  createProduct,
-  updateProduct,
-  deleteProduct,
-  getAllProductData,
-  getProductById,
+    createProduct,
+    updateProduct,
+    deleteProduct,
+    getAllProductData,
+    getProductById,
 } = require("../app/controllers/productController");
 const handleGetRoot = require("../app/controllers/root");
 const {
-  getAllUserData,
-  getUserById,
+    getAllUserData,
+    getUserById,
 } = require("../app/controllers/userController");
 const { authorize } = require("../app/middleware/authorize");
 const validator = require("../app/utils/validation");
@@ -46,10 +46,10 @@ router.get(prefix + "/users/:id", authorize, getUserById);
 router.post(prefix + "/product", authorize, validator, createProduct);
 
 // get all product
-router.get(prefix + "/product", getAllProductData);
+router.get(prefix + "/product", authorize, getAllProductData);
 
 // get product by id
-router.get(prefix + "/product/:productId", getProductById);
+router.get(prefix + "/product/:productId", authorize, getProductById);
 
 // update product
 router.put(prefix + "/product/:productId", authorize, validator, updateProduct);
