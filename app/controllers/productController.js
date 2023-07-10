@@ -60,7 +60,7 @@ module.exports = {
         try {
             const dataProduct = await findAll();
             if (dataProduct.length === 0) {
-                res.status(404).json({
+                res.status(200).json({
                     status: "failed",
                     message: "Data is empty",
                     data: [],
@@ -92,7 +92,7 @@ module.exports = {
 
         const dataProduct = await getProduct();
         if (dataProduct.length === 0) {
-            res.status(404).json({
+            res.status(200).json({
                 status: "failed",
                 message: "Data is empty",
                 data: [],
